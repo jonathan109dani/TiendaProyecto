@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/pruebas")
@@ -37,4 +39,47 @@ public class PruebasController {
         model.addAttribute("categorias", categorias);
         return "/pruebas/listado";
     }
+    
+    //Los métodos siguientes son para la prueba de consultas ampliadas
+    @GetMapping("/listado2")
+    public String listado2(Model model) {
+        var productos = productoService.getProductos(false);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query1")
+    public String consultaQuery1(@RequestParam(value = "precioInf1") double precioInf,
+            @RequestParam(value = "precioSup1") double precioSup, Model model) {
+        var productos = productoService.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf1", precioInf);
+        model.addAttribute("precioSup1", precioSup);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query2")
+    public String consultaQuery2(@RequestParam(value = "precioInf2") double precioInf,
+            @RequestParam(value = "precioSup2") double precioSup, Model model) {
+        var productos = productoService.metodoJPQL(precioInf, precioSup);
+        model.addAttribute("productos", productos);        
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf2", precioInf);
+        model.addAttribute("precioSup2", precioSup);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query3")
+    public String consultaQuery3(@RequestParam(value = "precioInf3") double precioInf,
+            @RequestParam(value = "precioSup3") double precioSup, Model model) {
+        var productos = productoService.metodoNativo(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf3", precioInf);
+        model.addAttribute("precioSup3", precioSup);
+        return "/pruebas/listado2";
+    }
+    
 }
