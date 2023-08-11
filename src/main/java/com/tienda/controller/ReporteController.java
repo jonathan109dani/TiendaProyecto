@@ -61,4 +61,22 @@ public class ReporteController {
         var reporte="ventasTotales";
         return reporteService.generaReporte(reporte, parametros, tipo);
       }
+      
+     @GetMapping("/categorias")
+     public ResponseEntity<Resource> reporteCategorias(@RequestParam String tipo)
+             throws IOException{
+        var reporte = "categorias";
+        return reporteService.generaReporte(reporte, null, tipo);
+     }
+     
+     @GetMapping("/productosPorCategoria")
+      public ResponseEntity<Resource> productosPorCategoria(
+            @RequestParam Integer categoria,
+            @RequestParam String tipo) throws IOException{
+          
+        Map<String, Object> parametros = new HashMap();
+        parametros.put("categoria", categoria);
+        var reporte="productosPorCategoria";
+        return reporteService.generaReporte(reporte, parametros, tipo);
+      }
 }
